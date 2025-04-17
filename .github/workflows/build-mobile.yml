@@ -1,0 +1,38 @@
+name: Build Mobile App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Install Expo CLI
+      run: npm install -g eas-cli
+
+    - name: Install dependencies
+      working-directory: ./mobile
+      run: npm install
+
+    - name: Configure EAS
+      working-directory: ./mobile
+      run: eas build:configure
+
+    - name: Build Android App
+      working-directory: ./mobile
+      run: eas build --platform android
+
+    - name: Build iOS App
+      working-directory: ./mobile
+      run: eas build --platform ios

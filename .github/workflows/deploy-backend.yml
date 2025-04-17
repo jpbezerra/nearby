@@ -1,0 +1,31 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Install dependencies
+      working-directory: ./api
+      run: npm install
+
+    - name: Run Prisma migrations
+      working-directory: ./api
+      run: npx prisma migrate deploy
+
+    - name: Start the server
+      working-directory: ./api
+      run: npm start
